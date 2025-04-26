@@ -3,7 +3,18 @@ const bcrypt = require("bcrypt");
 const authenticationToken = require('../middlewares/authenticationMiddleware');
 const cookie = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
+
+const transpoter = nodemailer.createTransport({
+  service:"gmail",
+  auth:{
+    user: "jaitleyvriti@gmail.com",
+    pass: "kepttjfvimnkjqaa",
+  }
+})
+
 
 exports.register = async (req, res) => {
   const { username, email, password, isPrivate } = req.body;
@@ -52,7 +63,7 @@ exports.login = async(req,res)=>{
   if(!verifyPassword){
     return res.status(301).json("wrong password");
   }
-  const token = jwt.sign({id:user._id},process.env.secretkey,{expiresIn:'10s'});
+  const token = jwt.sign({id:user._id},process.env.secretkey,{expiresIn:'15m'});
   const refreshToken = jwt.sign({id:user._id}, process.env.refreshkey, {expiresIn:'7d'});
 
   res.cookie("token",token,{
@@ -92,7 +103,6 @@ exports.updateUser= async (req,res)=>{
      
     await User.findOneAndUpdate(
       {_id: id}, {username: username, email: email, password: hashedPassword, isPrivate: isPrivate}, {new: true}
-
     );
 
     return res.status(200).json(`"${username} updated successfully !!`)
@@ -100,6 +110,37 @@ exports.updateUser= async (req,res)=>{
   }catch(error){
     console.log(error);
     return res.status(500).json(error);
-  }
+  }   
+}
+
+exports.resetPassword = async(req,res)=>{
+  try{
+    const existingUser = req.user;
+    console.log(existingUser);
+    if(!existingUser){
+      return res.status(400).json("User doesn't exist");
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     
+    await User.findByIdAndUpdate(req.user.id,{resetPasswordToken:hashedToken, resetPasswordExpires: new Date(Date.now() + 15 * 60 * 1000)}, {new:true});
+
+    const mailOptions={
+      from:"jaitleyvriti@gmail.com",
+      to: "jaitleyvriti@gmail.com",
+      subject:"Password reset link",
+      text:`This is your password reset link ${existingUser.username}
+      
+      Click on the link to verify and reset your password:
+      ${hashedToken}
+      Thank you :D`
+    };
+    transpoter .sendMail(mailOptions);
+    return res.status(200).json("link sent successfully");
+
+  }catch(err){
+    console.log(err);
+    return res.status(500).json(err);
+  }
 }

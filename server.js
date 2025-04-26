@@ -12,6 +12,7 @@ const follow = require("./routes/follow.routes");
 const chatbot = require("./routes/chatbot.routes");
 const refreshToken  = require('./routes/auth.routes');
 
+
 mongoose.connect('mongodb://localhost:27017/test').then(()=>console.log("Connected"))
 .catch(err=>console.error("MongoDB connection error:", err));
 app.use(cookieParser())
