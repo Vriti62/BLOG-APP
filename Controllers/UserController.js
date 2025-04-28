@@ -1,4 +1,6 @@
 const User = require("../Models/userModel");
+const express = require('express');
+const app = express();
 const bcrypt = require("bcrypt");
 const authenticationToken = require('../middlewares/authenticationMiddleware');
 const cookie = require('cookie-parser');
@@ -7,13 +9,13 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const transpoter = nodemailer.createTransport({
-  service:"gmail",
-  auth:{
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
     user: "jaitleyvriti@gmail.com",
-    pass: "kepttjfvimnkjqaa",
-  }
-})
+    pass: "ojayoenzwgvxonpp",
+  },
+});
 
 
 exports.register = async (req, res) => {
@@ -123,20 +125,21 @@ exports.resetPassword = async(req,res)=>{
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    console.log(resetToken);
     
     await User.findByIdAndUpdate(req.user.id,{resetPasswordToken:hashedToken, resetPasswordExpires: new Date(Date.now() + 15 * 60 * 1000)}, {new:true});
 
     const mailOptions={
       from:"jaitleyvriti@gmail.com",
-      to: "jaitleyvriti@gmail.com",
+      to: `${existingUser.email}`,
       subject:"Password reset link",
       text:`This is your password reset link ${existingUser.username}
       
       Click on the link to verify and reset your password:
-      ${hashedToken}
+      http://localhost:3001/reset-password/${resetToken}
       Thank you :D`
     };
-    transpoter .sendMail(mailOptions);
+    transporter .sendMail(mailOptions);
     return res.status(200).json("link sent successfully");
 
   }catch(err){
@@ -144,3 +147,42 @@ exports.resetPassword = async(req,res)=>{
     return res.status(500).json(err);
   }
 }
+
+exports.verifyToken = async(req,res)=>{
+  try{
+    const {token,newPassword} = req.body;
+    if(!token || !newPassword) return res.status(400).json("Token and new password required!!");
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    console.log(hashedToken);
+
+    const existingUser = await User.findOne({
+      resetPasswordToken:hashedToken,
+      resetPasswordExpires:{$gt:Date.now()}
+    });
+    console.log(existingUser);
+
+    if(!existingUser) return res.status(400).json("Invalid or expired token");
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await User.findOneAndUpdate(
+      {resetPasswordToken:hashedToken},
+      {password:hashedPassword, 
+        //used unset to remove these fields from mongodb - used with fineOneAndUpdate
+      $unset: {
+      resetPasswordExpires: "",
+      resetPasswordToken: ""
+        }
+    }, {new:true}
+    );
+
+    return res.status(200).json("Password reset successfully!!");
+  }catch(err){
+    return res.status(500).json(err);
+  }
+}
+
+
+
+
