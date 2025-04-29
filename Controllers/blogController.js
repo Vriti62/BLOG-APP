@@ -1,7 +1,9 @@
 const blog = require('../Models/blogModel');
+const cloudinary = require('../config/cloudinary');
 
 exports.createBlog = async (req,res)=> {
     const {title,content, published} = req.body;
+    const result = await cloudinary.uploader.upload(req.file.path);
     if(!title||!content ||typeof(content) != 'string'||typeof(title)!='string'){
         return res.status(400).json("enter all the fields correctly");
     }
@@ -9,9 +11,9 @@ exports.createBlog = async (req,res)=> {
     if(existingBlog){
         return res.status(400).json("Blog already exists, cant upload it again");
     }
-   
         const newBlog = new blog({
             title:title,
+            fileUrl: result.secure_url,
             content:content,
             likes:0,
             comments:0,
@@ -32,7 +34,6 @@ exports.updateBlog = async (req,res)=>{
     if(!existingBlog){
         return res.status(400).json("Blog doesn't exist, please check again");
     }
-
 
     await blog.findOneAndUpdate({_id:id},{        
         title:title,
