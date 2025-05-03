@@ -119,6 +119,7 @@ exports.resetPassword = async(req,res)=>{
   try{
     const existingUser = req.user;
     console.log(existingUser);
+    
     if(!existingUser){
       return res.status(400).json("User doesn't exist");
     }
