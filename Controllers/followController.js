@@ -33,7 +33,7 @@ exports.followUser = async (req,res) =>{
         console.log(newRelation);
         await newRelation.save();
         
-        return res.status(200).json("followed successfully!");
+        return res.status(200).json(`${senderID} followed successfully!`);
     }
         let newRelation  = new follow({
             senderID: req.user.id,
@@ -42,7 +42,7 @@ exports.followUser = async (req,res) =>{
         })
         await newRelation.save();
         console.log(newRelation);
-        return res.status(200).json("request sent successfully!");
+        return res.status(200).json("follow request sent successfully!");
 
     }catch(error){
         res.status(400).json(error);
@@ -71,5 +71,22 @@ exports.requestAccept= async (req,res)=>{
         }
     }catch(error){
         return res.status(400).json(error);
+    }
+}
+
+exports.getFollowRequests=async(req,res)=>{
+    try{
+        const user = req.user;
+        console.log(user);
+        console.log(user.id);
+            const followRequests = await follow.find({
+                recieverID:user.id,
+                status:'pending'
+            }).populate('senderID', 'username');
+        
+        console.log(followRequests);
+        return res.status(200).json(followRequests);
+    } catch(err){
+        return res.status(400).json(err);
     }
 }
