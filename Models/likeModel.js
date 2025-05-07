@@ -6,6 +6,7 @@ const likeSchema = new mongoose.Schema({
     },
     userID:{
         type:mongoose.Schema.ObjectId,
+        ref:'user',
         required:true
     }
 })
