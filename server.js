@@ -11,6 +11,7 @@ const like = require("./routes/like.routres");
 const follow = require("./routes/follow.routes");
 const chatbot = require("./routes/chatbot.routes");
 const refreshToken  = require('./routes/auth.routes');
+const comment = require('./routes/comment.routes');
 
 
 mongoose.connect('mongodb://localhost:27017/test').then(()=>console.log("Connected"))
@@ -21,6 +22,7 @@ app.use("/user", user);
 app.use("/admin", admin);
 app.use("/blog", blog);
 app.use("/like", like);
+app.use("/comment", comment);
 app.use("/follow", follow);
 app.use("/chatbot", chatbot);
 app.use("/", refreshToken);
