@@ -21,16 +21,21 @@ exports.addComment = async (req, res) => {
             return res.status(404).json("Blog doesn't exist.");
         }
 
-        // Create a new comment
+    
         const newComment = new Comment({
             BlogID: blogId,
             UserID: user,
             comments: comments
-        });
-
-        // Save the comment to the database
+        })
         await newComment.save();
-        return res.status(200).json("Comment posted successfully!");
+
+        const populatedComment= await Comment.findById(newComment._id).populate('UserID', 'username');
+      
+        
+        return res.status(200).json({
+            message:"Comment posted successfully!",
+            comment:populatedComment
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json(err);
