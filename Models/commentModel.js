@@ -10,7 +10,7 @@ const commentSchema = new mongoose.Schema({
         required: true,
         ref: 'user'
     },
-    comments:{
+    text:{
         type:String,
         required:true
     },
@@ -18,10 +18,6 @@ const commentSchema = new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         default:null,
         ref:'comment'
-    },
-    reply:{
-        type:String,
-        required:true
     }
 }, {timestamps:true});
 module.exports = mongoose.model('comment', commentSchema);
