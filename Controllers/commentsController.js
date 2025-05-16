@@ -41,3 +41,33 @@ exports.addComment = async (req, res) => {
         return res.status(500).json(err);
     }
 };
+
+exports.replyComment = async (req, res) => {
+    try{
+    const user = req.user.id;
+    const commentId = req.params.id;
+    const {commentReply} = req.body;
+    
+    const existingComment = await Comment.findById(commentId);
+    if(!existingComment) return res.status(400).json("comment doesn't exist. Please check");
+    console.log(existingComment)
+
+    const reply = new Comment({
+        BlogID: existingComment.BlogID,
+        UserID:user,
+        comments:existingComment.comments,
+        parentCommentId:commentId,
+        reply:commentReply
+    });
+
+    await reply.save();
+    const populatedReply = await Comment.findById(reply._id);
+
+    return res.status(200).json({
+        message:"replied successfully :D",
+        reply:populatedReply
+    });
+    }catch(err){
+        return res.status(400).json(err);
+    }
+}

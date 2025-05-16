@@ -13,6 +13,15 @@ const commentSchema = new mongoose.Schema({
     comments:{
         type:String,
         required:true
+    },
+    parentCommentId:{
+        type:mongoose.Schema.ObjectId,
+        default:null,
+        ref:'comment'
+    },
+    reply:{
+        type:String,
+        required:true
     }
 }, {timestamps:true});
 module.exports = mongoose.model('comment', commentSchema);
