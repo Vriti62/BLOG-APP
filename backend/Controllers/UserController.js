@@ -174,7 +174,7 @@ exports.verifyToken = async(req,res)=>{
       $unset: {
       resetPasswordExpires: "",
       resetPasswordToken: ""
-        }
+      }
     }, {new:true}
     );
 

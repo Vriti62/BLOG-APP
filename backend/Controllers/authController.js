@@ -16,7 +16,7 @@ exports.refreshToken= (req,res) => {
             
             const newAccessToken = jwt.sign({id:user._id}, process.env.secretkey, {expiresIn:"15m"});
 
-            res.cookie("refreshToken", newAccessToken,{
+            res.cookie("token", newAccessToken,{
                 httpOnly:true,
                 secure:true,
                 sameSite:"Strict",

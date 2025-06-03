@@ -56,7 +56,7 @@ exports.replyComment = async (req, res) => {
     });
 
     await reply.save();
-    const populatedReply = await Comment.findById(reply._id);
+    const populatedReply = await Comment.findById(reply._id).populate('parentCommentId', 'text');
 
     return res.status(200).json({
         message:"replied successfully :D",
