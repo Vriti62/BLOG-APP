@@ -3,6 +3,7 @@
  const authenticationToken = require('../middlewares/authenticationMiddleware');
  const cookie = require('cookie-parser');
  const jwt = require('jsonwebtoken');
+ const { paginationResults } = require("../middlewares/paginatedResults");
  const secretkey = "VRITI_JAITLEY"
  
 exports.createAdmin = async (req, res) => {
@@ -40,3 +41,10 @@ exports.createAdmin = async (req, res) => {
 
  };
  
+ exports.getUsers=async (req,res)=>{
+    try{        
+        return res.status(200).json(res.paginationResults);
+    }catch(err){
+        return res.status(500).json(err);
+    }
+ }

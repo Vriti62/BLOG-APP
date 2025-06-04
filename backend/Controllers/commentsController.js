@@ -3,6 +3,7 @@
 
 const Comment = require('../Models/commentModel');
 const blog = require('../Models/blogModel');
+const { paginationResults } = require("../middlewares/paginatedResults");
 
 exports.addComment = async (req, res) => {
     try {
@@ -64,5 +65,13 @@ exports.replyComment = async (req, res) => {
     });
     }catch(err){
         return res.status(400).json(err);
+    }
+}
+
+exports.getComments = async(req,res)=>{
+    try{
+        return res.status(200).json(res.paginationResults);
+    }catch(err){
+        return res.status(500).json(err);
     }
 }
