@@ -58,4 +58,13 @@ exports.updateBlog = async (req,res)=>{
 }
 }
 
+exports.getAllBlogs = async (req, res) => {
+    try {
+        const blogs = await blog.find().sort({ createdAt: -1 });
+        return res.status(200).json(blogs);
+    } catch (err) {
+        return res.status(500).json({ error: "Error fetching blogs" });
+    }
+};
+
 

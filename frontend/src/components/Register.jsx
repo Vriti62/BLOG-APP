@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -21,8 +20,8 @@ export default function Register() {
       });
       const data = await res.json();
       if (res.ok) {
-        setMsg("Registered!");
-        navigate("/login");
+        setMsg("Registered! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 1200);
       } else {
         setMsg(data);
       }
@@ -32,15 +31,49 @@ export default function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} />
-        <input placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-        <input placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-        <button type="submit">Register</button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-orange-200 to-pink-200">
+      <form
+        className="bg-white p-8 rounded-xl shadow-xl flex flex-col min-w-[320px] w-full max-w-md"
+        onSubmit={handleSubmit}
+      >
+        <h2 className="text-2xl font-bold text-orange-500 mb-6 text-center">Sign Up</h2>
+        <input
+          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          placeholder="Username"
+          value={username}
+          onChange={e=>setUsername(e.target.value)}
+          required
+        />
+        <input
+          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          placeholder="Email"
+          type="email"
+          value={email}
+          onChange={e=>setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={e=>setPassword(e.target.value)}
+          required
+        />
+        <button
+          className="bg-gradient-to-r from-pink-400 to-orange-400 text-white py-2 rounded font-semibold shadow hover:scale-105 transition mb-2"
+          type="submit"
+        >
+          Sign Up
+        </button>
+        <div className="text-orange-500 text-center mb-2 min-h-[1.2rem]">{msg}</div>
+        <div className="text-center text-sm">
+          Already have an account?{" "}
+          <Link className="text-orange-500 font-bold hover:underline" to="/login">
+            Login
+          </Link>
+        </div>
       </form>
-      <div>{msg}</div>
     </div>
   );
 }

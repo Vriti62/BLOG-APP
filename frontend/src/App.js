@@ -1,23 +1,54 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import BlogList from "./components/BlogList";
+import Home from "./components/Home";
 
+function Navbar() {
+  const location = useLocation();
+  const navLinks = [
+    { to: "/login", label: "Login" },
+    { to: "/register", label: "Signup" },
+  ];
+  return (
+    <nav className="bg-white/90 backdrop-blur shadow-md rounded-b-xl px-6 md:px-10 py-3 mb-6 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="text-xl font-bold text-orange-600 hover:text-orange-700 transition">
+          MyBlog
+        </Link>
+
+        {/* Navigation Links */}
+        <div className="flex gap-4 md:gap-6">
+          {navLinks.map(link => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`px-4 py-2 rounded-md font-medium text-sm md:text-base transition-all duration-200 ${
+                location.pathname === link.to
+                  ? "bg-orange-500 text-white shadow"
+                  : "text-gray-700 hover:bg-orange-100 hover:text-orange-600"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
+)}
 
 export default function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <Link to="/">Blogs</Link> | <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
-        </nav>
-        <Routes>
-          <Route path="/" element={<BlogList />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </Router>
   );
 }

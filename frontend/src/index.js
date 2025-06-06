@@ -1,3 +1,4 @@
+import './index.css'; // <-- Make sure this line is present!
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
