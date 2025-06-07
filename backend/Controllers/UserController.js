@@ -59,7 +59,7 @@ exports.login = async(req,res)=>{
   
 
   if(!user){
-    return res.json(` user doesn't exist`);
+    return res.status(400).json(` user doesn't exist`);
   }
   const verifyPassword = await bcrypt.compare(password, user.password);
   if(!verifyPassword){
@@ -68,11 +68,11 @@ exports.login = async(req,res)=>{
   const token = jwt.sign({id:user._id},process.env.secretkey,{expiresIn:'15m'});
   const refreshToken = jwt.sign({id:user._id}, process.env.refreshkey, {expiresIn:'7d'});
 
-  res.cookie("token",token,{
-    httpOnly:true,
-    secure:true,
-    sameSite:"Strict",
-    maxAge:15*60*1000 //15 minutes
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false, // <-- set to false for localhost development
+    sameSite: "Lax", // or "None" if using HTTPS
+    maxAge: 15 * 60 * 1000
   })
 
   res.cookie("refreshToken",refreshToken,{

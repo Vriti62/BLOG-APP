@@ -4,12 +4,15 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import BlogList from "./components/BlogList";
 import Home from "./components/Home";
+import UserDashboard from "./components/UserDashboard";
+import CreateBlog from "./components/CreateBlog";
 
 function Navbar() {
   const location = useLocation();
   const navLinks = [
     { to: "/login", label: "Login" },
     { to: "/register", label: "Signup" },
+    { to: "/dashboard", label: "Profile" }, // Add this line
   ];
   return (
     <nav className="bg-white/90 backdrop-blur shadow-md rounded-b-xl px-6 md:px-10 py-3 mb-6 sticky top-0 z-50">
@@ -48,6 +51,8 @@ export default function App() {
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/create-blog" element={<CreateBlog />} />
       </Routes>
     </Router>
   );

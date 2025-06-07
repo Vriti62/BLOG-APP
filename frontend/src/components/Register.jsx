@@ -31,21 +31,21 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-orange-200 to-pink-200">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-blue-300 to-blue-500">
       <form
-        className="bg-white p-8 rounded-xl shadow-xl flex flex-col min-w-[320px] w-full max-w-md"
+        className="bg-white p-14 rounded-3xl shadow-2xl flex flex-col min-w-[350px] w-full max-w-2xl"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl font-bold text-orange-500 mb-6 text-center">Sign Up</h2>
+        <h2 className="text-3xl font-bold text-blue-600 mb-8 text-center">Sign Up</h2>
         <input
-          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          className="mb-6 px-6 py-3 border border-blue-300 rounded-lg text-lg focus:outline-none focus:border-blue-500"
           placeholder="Username"
           value={username}
           onChange={e=>setUsername(e.target.value)}
           required
         />
         <input
-          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          className="mb-6 px-6 py-3 border border-blue-300 rounded-lg text-lg focus:outline-none focus:border-blue-500"
           placeholder="Email"
           type="email"
           value={email}
@@ -53,7 +53,7 @@ export default function Register() {
           required
         />
         <input
-          className="mb-4 px-4 py-2 border border-orange-300 rounded focus:outline-none focus:border-orange-500"
+          className="mb-6 px-6 py-3 border border-blue-300 rounded-lg text-lg focus:outline-none focus:border-blue-500"
           placeholder="Password"
           type="password"
           value={password}
@@ -61,15 +61,15 @@ export default function Register() {
           required
         />
         <button
-          className="bg-gradient-to-r from-pink-400 to-orange-400 text-white py-2 rounded font-semibold shadow hover:scale-105 transition mb-2"
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 rounded-lg font-semibold shadow hover:scale-105 transition mb-4 text-lg"
           type="submit"
         >
           Sign Up
         </button>
-        <div className="text-orange-500 text-center mb-2 min-h-[1.2rem]">{msg}</div>
-        <div className="text-center text-sm">
+        <div className="text-blue-500 text-center mb-4 min-h-[1.2rem] text-base">{msg}</div>
+        <div className="text-center text-base">
           Already have an account?{" "}
-          <Link className="text-orange-500 font-bold hover:underline" to="/login">
+          <Link className="text-blue-600 font-bold hover:underline" to="/login">
             Login
           </Link>
         </div>
